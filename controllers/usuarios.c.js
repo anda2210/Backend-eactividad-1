@@ -33,11 +33,11 @@ class usuariosControllers {
                 if (!usuario.nombre || !usuario.apellido || !usuario.cedula || !usuario.correo || !usuario.usuario || !usuario.contraseña) {
                     return reject("Faltan datos escenciales para ingresar al usuario")
                 }
-                usuarios.forEach(user => {
-                    if (user.usuario === usuario.usuario) {
+                for (let i = 0; i < usuarios.length; i++) {
+                    if (usuarios[i].usuario === usuario.usuario) {
                         return reject("Ya esta en uso ese usuario")
-                    }
-                });
+                    }                
+                }
                 let validacion =/^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])\w{8,}$/;
                 if(validacion.test(usuario.contraseña)){
                     let nuevo_usuario = {
@@ -53,6 +53,40 @@ class usuariosControllers {
                         mensaje: "Se ha registrado con éxito en el Banco",
                         data: usuario.usuario
                     })
+                }else{
+                   return reject("La contraseña debe tener 1 letra, 1 mayúscula, 1 número y un mínimo de 8 digitos")       
+                } 
+            } catch (error) {
+                return reject(error);
+            }
+        })
+    };
+
+    editar(usuario, nuevo_usuario) {
+        return new Promise((resolve, reject) => {
+            try {
+                if (!nuevo_usuario.contraseña || !nuevo_usuario.correo) {
+                    return reject("Faltan datos escenciales para ingresar al usuario");
+                }
+                let validacion =/^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])\w{8,}$/;
+                if(validacion.test(nuevo_usuario.contraseña)){
+                    for (let i = 0; i < usuarios.length; i++) {
+                        if (usuarios[i].usuario === usuario) {
+                            usuarios[i].correo = nuevo_usuario.correo,
+                            usuarios[i].contraseña = nuevo_usuario.contraseña
+                            return resolve({
+                                mensaje: "Editado con éxito el correo y la clave del usuario " + usuario,
+                                data: {
+                                    nombre: usuarios[i].nombre,
+                                    apellido: usuarios[i].apellido,
+                                    cedula: usuarios[i].cedula,
+                                    correo: usuarios[i].correo,
+                                    usuario: usuarios[i].usuario
+                                }
+                            })
+                        }                
+                    }  
+                    return reject("No existe el usuario")
                 }else{
                    return reject("La contraseña debe tener 1 letra, 1 mayúscula, 1 número y un mínimo de 8 digitos")       
                 } 

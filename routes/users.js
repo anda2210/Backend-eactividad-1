@@ -38,5 +38,22 @@ router.post('/agregar', function(req, res, next) {
   })
 });
 
+/* PUT usuarios: */
+router.put('/editar/:usuario', function(req, res, next) {
+  usuariosC.editar(req.params.usuario, req.body)
+  .then((respuesta) => {
+    res.status(201).json({
+      status: "201",
+      mensaje: respuesta.mensaje,
+      usuario: respuesta.data
+    })
+  })
+  .catch((error) => {
+    res.status(400).json({
+      status: "400",
+      mensaje: error
+    })
+  })
+})
 
 module.exports = router;
