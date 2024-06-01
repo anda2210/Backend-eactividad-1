@@ -1,4 +1,5 @@
-const { usuarios } = require("../database/database");
+const { usuarios, ahorros, prestamos, cooperativas_usuarios, cooperativas } = require("../database/database");
+const { tasa_interes_diaria } = require("../functions/tasas");
 
 class usuariosControllers {
     listar() {
@@ -26,6 +27,72 @@ class usuariosControllers {
             }
         });
     };
+
+    cuentas(usuario) {
+        return new Promise((resolve, reject) => {
+            try {
+                let falta = true
+                let consultado = {}
+                let cuen_aho = {}
+                let cuen_pre = {}
+                let cuen_cop = []
+                for (let i = 0; i < usuarios.length; i++) {
+                    if (usuarios[i].usuario === usuario) {
+                        falta = false
+                        consultado = usuarios[i]
+                    }
+                }
+                if (falta) {return reject("No existe el usuario que deseas ver sus cuentas")};
+                ahorros.forEach(ahorro => {
+                    if (ahorro.dueño === usuario) {
+                        cuen_aho = ahorro
+                    }
+                });
+                prestamos.forEach(prestamo => {
+                    if (prestamo.dueño === usuario) {
+                        cuen_pre = prestamo
+                    }
+                });
+                cooperativas_usuarios.forEach(relacion => {
+                    if (relacion.usuario === usuario) {
+                        cuen_cop.push(relacion)
+                    }
+                });
+                //Calculamos las tasas de interes diarias (en el caso de las cooperativas no se calculan)
+                cuen_aho.tasa_diaria = tasa_interes_diaria(cuen_aho.intereses, cuen_aho.balance).toFixed(2)
+                cuen_pre.tasa_diaria = tasa_interes_diaria(cuen_pre.intereses, cuen_pre.balance).toFixed(2)
+                return resolve({
+                    mensaje: "Se ha listado con éxito las cuentas del usuario " + usuario,
+                    data: {
+                        usuario: {
+                            nombre: consultado.nombre,
+                            apellido: consultado.apellido,
+                            cedula: consultado.cedula,
+                            correo: consultado.correo
+                        },
+                        cuentas: {
+                            ahorros: {
+                                balance: cuen_aho.balance + "Bs",
+                                intereses: cuen_aho.intereses + "%",
+                                numero_cuenta: cuen_aho.numero_cuenta,
+                                tasa_diaria: cuen_aho.tasa_diaria + "Bs"
+                            },
+                            prestamos: {
+                                balance: cuen_pre.balance + "Bs",
+                                intereses: cuen_pre.intereses + "%",
+                                estado: cuen_pre.estado,
+                                numero_cuenta: cuen_pre.numero_cuenta,
+                                tasa_diaria: cuen_pre.tasa_diaria + "Bs"
+                            },
+                            cooperativas: cuen_cop
+                        }
+                    }
+                })
+            } catch (error) {
+                return reject(error);
+            }
+        });
+    }
 
     agregar(usuario) {
         return new Promise((resolve, reject) => {

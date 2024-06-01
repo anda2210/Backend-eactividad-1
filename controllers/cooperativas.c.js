@@ -75,6 +75,7 @@ class cooperativasControllers {
                                 let relacion = {
                                     usuario: usuario,
                                     cooperativa: cooperativa,
+                                    balance: 0,
                                     fechas_cuotas: programacion_cuotas_semanal(cooperativas[a].fecha_inicio)
                                 }
                                 cooperativas_usuarios.push(relacion);
