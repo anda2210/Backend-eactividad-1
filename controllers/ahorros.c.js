@@ -33,6 +33,11 @@ class ahorrosControllers {
                 if (!ahorro.dueño) {
                     return reject("Faltan propiedades escenciales para agregar la cuenta")
                 }
+                for (let a = 0; a < ahorros.length; a++) {
+                    if (ahorros[a].dueño === ahorro.dueño) {
+                        return reject("Ya este usuario posee una cuenta de Ahorros")
+                    }
+                }
                 for (let i = 0; i < usuarios.length; i++) {
                     if (usuarios[i].usuario === ahorro.dueño) {
                         let cuenta_nueva = {

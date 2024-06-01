@@ -27,7 +27,7 @@ router.post('/agregar', function(req, res, next) {
       res.status(201).json({
         status: "201",
         mensaje: respuesta.mensaje,
-        cuenta_ahorro: respuesta.data
+        cuenta_prestamo: respuesta.data
       })
     })
     .catch((error) => {
