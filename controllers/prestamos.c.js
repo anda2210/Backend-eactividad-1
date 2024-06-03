@@ -1,6 +1,6 @@
 const { v4: uuidv4 } = require('uuid');
 const { prestamos, usuarios } = require('../database/database');
-const { fecha } = require('../functions/fechas');
+const { fecha, fecha_hoy } = require('../functions/fechas');
 
 class prestamosControllers {
     listar() {
@@ -30,6 +30,46 @@ class prestamosControllers {
             }
         });
     };
+
+    fecha_pago(cuenta) {
+        return new Promise((resolve, reject) => {
+            try {
+                for (let i = 0; i < prestamos.length; i++) {
+                    if (prestamos[i].numero_cuenta === cuenta) {
+                        if (prestamos[i].estado === "solvente") {
+                            return resolve({
+                                mensaje: "La cuenta es libre de deuda",
+                                data: {
+                                    balance: prestamos[i]
+                                }
+                            })
+                        }
+                        if (fecha_hoy() <= prestamos[i].fecha_pago) {
+                            return resolve({
+                                mensaje: "La cuenta posee una deuda en la siguiente fecha proxima" ,
+                                data: {
+                                    fecha_proxima: prestamos[i].fecha_pago,
+                                    numero_cuenta: prestamos[i].numero_cuenta,
+                                    dueño: prestamos[i].dueño
+                                }
+                            })
+                        }
+                        return resolve({
+                            mensaje: "La cuenta tiene una deuda atrasada desde la siguiente fecha",
+                            data: {
+                                fecha_proxima: prestamos[i].fecha_pago,
+                                numero_cuenta: prestamos[i].numero_cuenta,
+                                dueño: prestamos[i].dueño
+                            }
+                        })
+                    }
+                }
+                return reject("No existe la cuenta que desea ver su fecha de pago")
+            } catch (error) {
+                return reject(error);
+            }
+        });
+    }
 
     agregar(prestamo) {
         return new Promise((resolve, reject) => {

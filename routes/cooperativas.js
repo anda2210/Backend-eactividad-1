@@ -20,6 +20,24 @@ router.get('/', function(req, res, next) {
   })
 });
 
+/* GET Grupos de Cooperativas proxima fecha de pago: */
+router.get('/fecha-proxima/:cuenta', function(req, res, next) {
+  cooperativasC.fecha_proxima(req.params.cuenta)
+  .then((respuesta) => {
+    res.status(200).json({
+      status: "200",
+      mensaje: respuesta.mensaje,
+      cooperativa: respuesta.data
+    })
+  })
+  .catch((error) => {
+    res.status(400).json({
+      status: "400",
+      mensaje: error
+    })
+  })
+});
+
 /* POST Grupos de Cooperativas : */
 router.post('/agregar', function(req, res, next) {
     cooperativasC.agregar(req.body)

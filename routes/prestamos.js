@@ -20,6 +20,24 @@ router.get('/', function (req, res, next) {
         })
 });
 
+/* GET Cuentas prestamos la fecha proxima de pago: */
+router.get('/fecha-proxima/:cuenta', function (req, res, next) {
+  prestamosC.fecha_pago(req.params.cuenta)
+      .then((respuesta) => {
+          res.status(200).json({
+              status: "200",
+              mensaje: respuesta.mensaje,
+              cuenta_prestamo: respuesta.data
+          })
+      })
+      .catch((error) => {
+          res.status(400).json({
+              status: "400",
+              mensaje: error
+          })
+      })
+});
+
 /* POST Cuentas prestamos: */
 router.post('/agregar', function(req, res, next) {
     prestamosC.agregar(req.body)

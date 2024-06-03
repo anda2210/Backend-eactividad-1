@@ -1,6 +1,6 @@
 const { v4: uuidv4 } = require('uuid');
 const { cooperativas, usuarios, cooperativas_usuarios } = require('../database/database');
-const { programacion_cuotas_semanal } = require('../functions/fechas');
+const { programacion_cuotas_semanal, fecha_hoy } = require('../functions/fechas');
 
 class cooperativasControllers {
     listar() {
@@ -31,6 +31,32 @@ class cooperativasControllers {
         });
     }
 
+    fecha_proxima(cuenta) {
+        return new Promise((resolve, reject) => {
+            try {
+                for (let i = 0; i < cooperativas.length; i++) {
+                    if (cooperativas[i].numero_cuenta === cuenta) {
+                        for (let a = 0; a < cooperativas[i].fechas_cuotas.length; a++) {
+                            if (fecha_hoy() <= cooperativas[i].fechas_cuotas[a]) {
+                                return resolve({
+                                    mensaje: "Se ha encontrado con exito la proxima fecha de pago de esta cuenta",
+                                    data: {
+                                        numero_cuenta: cuenta,
+                                        proxima_fecha: cooperativas[i].fechas_cuotas[a]
+                                    }
+                                })
+                            }
+                        }
+                        return reject("Ya han pasado todas fechas de pago de esta cuenta de cooperativa")
+                    }
+                }
+                return reject("No existe la cuenta que desea ver su fecha de pago")
+            } catch (error) {
+                return reject(error);
+            }
+        });
+    }
+
     agregar(cooperativa) {
         return new Promise((resolve, reject) => {
             try {
@@ -46,6 +72,7 @@ class cooperativasControllers {
                     modalidad: cooperativa.modalidad,
                     duracion: cooperativa.duracion,
                     fecha_inicio: cooperativa.fecha_inicio,
+                    fechas_cuotas: programacion_cuotas_semanal(cooperativa.fecha_inicio),
                     numero_cuenta: uuidv4(),
                     usuarios_asociados: []
                 }

@@ -62,7 +62,27 @@ function programacion_cuotas_semanal(fecha) {
     return fechas
 }
 
+function fecha_hoy() {
+    //Creamos la fecha de hoy
+    let fecha = new Date();
+    let fecha_hoy = ''
+    if ((fecha.getMonth() + 1) > 9 && (fecha.getDate()) > 9) {
+        fecha_hoy = fecha.getFullYear() + "-" + (fecha.getMonth() + 1) + "-" + fecha.getDate();
+    }
+    if ((fecha.getMonth() + 1) < 9 && (fecha.getDate()) > 9) {
+        fecha_hoy = fecha.getFullYear() + "-" + "0" + (fecha.getMonth() + 1) + "-" + fecha.getDate();
+    }
+    if ((fecha.getMonth() + 1) > 9 && (fecha.getDate()) < 9) {
+        fecha_hoy = fecha.getFullYear() + "-" + (fecha.getMonth() + 1) + "-0" + fecha.getDate();
+    }
+    if ((fecha.getMonth() + 1) < 9 && (fecha.getDate()) < 9) {
+        fecha_hoy = fecha.getFullYear() + "-" + "0" + (fecha.getMonth() + 1) + "-0" + fecha.getDate();
+    }
+    return fecha_hoy
+}
+
 module.exports = {
     fecha,
-    programacion_cuotas_semanal
+    programacion_cuotas_semanal,
+    fecha_hoy
 }
