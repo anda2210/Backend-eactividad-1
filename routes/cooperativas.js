@@ -91,6 +91,24 @@ router.delete('/eliminar-relacion/:usuario/:cuenta', function(req, res, next) {
   })
 });
 
+/* PUT Grupos Cooperativas: */
+router.put('/editar/:cuenta', function(req, res, next) {
+  cooperativasC.editar(req.body, req.params.cuenta)
+  .then((respuesta) => {
+    res.status(201).json({
+      status: "201",
+      mensaje: respuesta.mensaje,
+      cooperativa_editada: respuesta.data
+    })
+  })
+  .catch((error) => {
+    res.status(400).json({
+      status: "400",
+      mensaje: error
+    })
+  })
+});
+
 /* DELETE Grupo de Cooperativa: */
 router.delete('/eliminar/:cuenta', function(req, res, next) {
   cooperativasC.eliminar(req.params.cuenta)

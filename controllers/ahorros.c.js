@@ -65,6 +65,34 @@ class ahorrosControllers {
         });
     }
 
+    editar(ahorro, cuenta) {
+        return new Promise((resolve, reject) => {
+            try {
+                if (!ahorro.intereses || !ahorro.balance) {
+                    return reject("Faltan propiedades escenciales para agregar la cuenta")
+                }
+                for (let i = 0; i < ahorros.length; i++) {
+                    if (ahorros[i].numero_cuenta === cuenta) {
+                        ahorros[i].intereses = ahorro.intereses
+                        ahorros[i].balance = ahorro.balance
+                        return resolve({
+                            mensaje: "Editado con exito la cuenta de ahorros",
+                            data: {
+                                balance: ahorros[i].balance + "Bs",
+                                intereses: ahorros[i].intereses + "%",
+                                dueño: ahorros[i].dueño,
+                                numero_cuenta: ahorros[i].numero_cuenta
+                            }
+                        })
+                    }
+                }
+                return reject("No existe la cuenta que deseas editar")
+            } catch (error) {
+                return reject(error);
+            }
+        });
+    }
+
     eliminar(cuenta) {
         return new Promise((resolve, reject) => {
             try {

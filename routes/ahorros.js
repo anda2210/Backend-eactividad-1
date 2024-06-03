@@ -38,6 +38,24 @@ router.post('/agregar', function(req, res, next) {
     })
 });
 
+/* PUT Cuentas ahorros: */
+router.put('/editar/:cuenta', function(req, res, next) {
+  ahorrosC.editar(req.body, req.params.cuenta)
+  .then((respuesta) => {
+    res.status(201).json({
+      status: "201",
+      mensaje: respuesta.mensaje,
+      cuenta_prestamo: respuesta.data
+    })
+  })
+  .catch((error) => {
+    res.status(400).json({
+      status: "400",
+      mensaje: error
+    })
+  })
+});
+
 /* DELETE Cuentas ahorros: */
 router.delete('/eliminar/:cuenta', function(req, res, next) {
   ahorrosC.eliminar(req.params.cuenta)

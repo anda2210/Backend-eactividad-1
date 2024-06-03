@@ -87,6 +87,38 @@ class cooperativasControllers {
         });
     }
 
+    editar(cooperativa, cuenta) {
+        return new Promise((resolve, reject) => {
+            try {
+                if (!cooperativa.cuota || !cooperativa.balance) {
+                    return reject("Faltan propiedades escenciales para editar el Grupo de Cooperativa")
+                }
+                for (let i = 0; i < cooperativas.length; i++) {
+                    if (cooperativas[i].numero_cuenta === cuenta) {
+                        cooperativas[i].cuota = cooperativa.cuota
+                        cooperativas[i].balance = cooperativa.balance
+                        return resolve({
+                            mensaje: "Editado con exito el Grupo de Cooperativa",
+                            data: {
+                                balance: cooperativas[i].balance + "Bs",
+                                cuota: cooperativas[i].cuota + "Bs",
+                                modalidad: cooperativas[i].modalidad,
+                                duracion: cooperativas[i].duracion,
+                                fecha_inicio: cooperativas[i].fecha_inicio,
+                                fechas_cuotas: cooperativas[i].fechas_cuotas,
+                                numero_cuenta: cooperativas[i].numero_cuenta,
+                                usuarios_asociados: cooperativas[i].usuarios_asociados
+                            }
+                        })
+                    }
+                }
+                return reject("No existe la cuenta que deseas editar")
+            } catch (error) {
+                return reject(error);
+            }
+        });
+    }
+
     relacion_usuario(usuario, cooperativa) {
         return new Promise((resolve, reject) => {
             try {
