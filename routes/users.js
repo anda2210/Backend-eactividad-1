@@ -20,6 +20,24 @@ router.get('/', function(req, res, next) {
   })
 });
 
+/* GET Resumen del capital del banco. */
+router.get('/resumen', function(req, res, next) {
+  usuariosC.resumen()
+  .then((respuesta) => {
+    res.status(200).json({
+      status: "200",
+      mensaje: respuesta.mensaje,
+      usuarios: respuesta.data
+    })
+  })
+  .catch((error) => {
+    res.status(400).json({
+      status: "400",
+      mensaje: error
+    })
+  })
+});
+
 /* GET Cuentas deun usuario especifico */
 router.get('/cuentas/:usuario', function(req, res, next) {
   usuariosC.cuentas(req.params.usuario)
