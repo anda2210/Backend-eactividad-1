@@ -72,6 +72,23 @@ router.put('/editar/:usuario', function(req, res, next) {
       mensaje: error
     })
   })
-})
+});
+
+/* DELETE Usuarios: */
+router.delete('/eliminar/:usuario', function(req, res, next) {
+  usuariosC.eliminar(req.params.usuario)
+  .then((respuesta) => {
+    res.status(200).json({
+      status: "200",
+      mensaje: respuesta.mensaje
+    })
+  })
+  .catch((error) => {
+    res.status(400).json({
+      status: "400",
+      mensaje: error
+    })
+  })
+});
 
 module.exports = router;

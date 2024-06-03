@@ -162,6 +162,46 @@ class usuariosControllers {
             }
         })
     };
+
+    eliminar(usuario) {
+        return new Promise((resolve, reject) => {
+            try {
+                for (let i = 0; i < usuarios.length; i++) {
+                    if (usuarios[i].usuario === usuario) {
+                        usuarios.splice(i, 1);
+                        for (let a = 0; a < ahorros.length; a++) {
+                            if (ahorros[a].dueño === usuario) {
+                                ahorros.splice(a, 1);
+                            }
+                        }
+                        for (let e = 0; e < prestamos.length; e++) {
+                            if (prestamos[e].dueño === usuario) {
+                                prestamos.splice(e, 1);
+                            }
+                        }
+                        for (let o = 0; o < cooperativas_usuarios.length; o++) {
+                            if (cooperativas_usuarios[o].usuario === usuario) {
+                                cooperativas_usuarios.splice(o, 1)
+                            }
+                        }
+                        for (let u = 0; u < cooperativas.length; u++) {
+                            for (let b = 0; b < cooperativas[u].usuarios_asociados.length; b++) {
+                                if (cooperativas[u].usuarios_asociados[b] === usuario) {
+                                    cooperativas[u].usuarios_asociados.splice(b, 1)
+                                }
+                            }
+                        }
+                        return resolve({
+                            mensaje: "Se ha eliminado con exito el usuario " + usuario + " y todas sus cuentas en el Banco"
+                        })
+                    } 
+                }
+                return reject("No existe el usuario que deseas eliminar")
+            } catch (error) {
+                return reject(error);
+            }
+        });
+    }
 }
 
 module.exports = new usuariosControllers();
