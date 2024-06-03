@@ -64,6 +64,24 @@ class ahorrosControllers {
             }
         });
     }
+
+    eliminar(cuenta) {
+        return new Promise((resolve, reject) => {
+            try {
+                for (let i = 0; i < ahorros.length; i++) {
+                    if (ahorros[i].numero_cuenta === cuenta) {
+                        ahorros.splice(i, 1);
+                        return resolve({
+                            mensaje: "Se ha eliminado con exito la cuenta de ahorro " + cuenta
+                        })
+                    }
+                }
+                return reject("No existe la cuenta de ahorro que desea eliminar")
+            } catch (error) {
+                return reject(error);
+            }
+        });
+    }
 }
 
 module.exports = new ahorrosControllers();

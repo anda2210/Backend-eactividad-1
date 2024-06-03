@@ -118,6 +118,24 @@ class prestamosControllers {
             }
         });
     }
+
+    eliminar(cuenta) {
+        return new Promise((resolve, reject) => {
+            try {
+                for (let i = 0; i < prestamos.length; i++) {
+                    if (prestamos[i].numero_cuenta === cuenta) {
+                        prestamos.splice(i, 1);
+                        return resolve({
+                            mensaje: "Se ha eliminado con exito la cuenta de prestamos " + cuenta
+                        })
+                    }
+                }
+                return reject("No existe la cuenta de prestamo que desea eliminar")
+            } catch (error) {
+                return reject(error);
+            }
+        });
+    }
 }
 
 module.exports = new prestamosControllers();

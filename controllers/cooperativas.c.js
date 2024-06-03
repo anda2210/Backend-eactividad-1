@@ -160,6 +160,29 @@ class cooperativasControllers {
             }
         });
     }
+
+    eliminar(cuenta) {
+        return new Promise((resolve, reject) => {
+            try {
+                for (let i = 0; i < cooperativas.length; i++) {
+                    if (cooperativas[i].numero_cuenta === cuenta) {
+                        cooperativas.splice(i, 1);
+                        for (let a = 0; a < cooperativas_usuarios.length; a++) {
+                            if (cooperativas_usuarios[a].cooperativa === cuenta) {
+                                cooperativas_usuarios.splice(a, 1);
+                            }
+                        }
+                        return resolve({
+                            mensaje: "Se ha eliminado con exito la cuenta de Cooperativa " + cuenta
+                        })
+                    }
+                }
+                return reject("No existe la cuenta de Cooperativa que desea eliminar")
+            } catch (error) {
+                return reject(error);
+            }
+        });
+    }
 }
 
 module.exports = new cooperativasControllers();

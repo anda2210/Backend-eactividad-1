@@ -56,4 +56,21 @@ router.post('/agregar', function(req, res, next) {
     })
 });
 
+/* DELETE Cuentas prestamos: */
+router.delete('/eliminar/:cuenta', function(req, res, next) {
+    prestamosC.eliminar(req.params.cuenta)
+    .then((respuesta) => {
+      res.status(200).json({
+        status: "200",
+        mensaje: respuesta.mensaje
+      })
+    })
+    .catch((error) => {
+      res.status(400).json({
+        status: "400",
+        mensaje: error
+      })
+    })
+  });
+
 module.exports = router;
