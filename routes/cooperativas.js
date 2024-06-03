@@ -74,4 +74,22 @@ router.post('/:usuario/:cooperativa', function(req, res, next) {
     })
 });
 
+/* DELETE Relacion de Usuarios con Cooperativas: */
+router.delete('/eliminar-relacion/:usuario/:cuenta', function(req, res, next) {
+  cooperativasC.eliminar_relacion(req.params.usuario, req.params.cuenta)
+  .then((respuesta) => {
+    res.status(200).json({
+      status: "200",
+      mensaje: respuesta.mensaje
+    })
+  })
+  .catch((error) => {
+    res.status(400).json({
+      status: "400",
+      mensaje: error
+    })
+  })
+});
+
+
 module.exports = router;

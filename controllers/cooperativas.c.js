@@ -122,6 +122,44 @@ class cooperativasControllers {
             }
         });
     }
+
+    eliminar_relacion(usuario, cuenta) {
+        return new Promise((resolve, reject) => {
+            try {
+                let no_aparece = true
+                for (let o = 0; o < usuarios.length; o++) {
+                    if (usuarios[o].usuario === usuario) {
+                        no_aparece = false
+                    }
+                }
+                if (no_aparece) {
+                    return reject("El usuario no esta regisrado en el banco")
+                }
+                for (let i = 0; i < cooperativas.length; i++) {
+                    if (cooperativas[i].numero_cuenta === cuenta) {
+                        for (let a = 0; a < cooperativas[i].usuarios_asociados.length; a++) {
+                            if (cooperativas[i].usuarios_asociados[a] === usuario) {
+                                cooperativas[i].usuarios_asociados.splice(a, 1)
+                                for (let e = 0; e < cooperativas_usuarios.length; e++) {
+                                    if (cooperativas_usuarios[e].usuario === usuario && cooperativas_usuarios[e].cooperativa === cuenta) {
+                                        cooperativas_usuarios.splice(e, 1)
+                                        return resolve({
+                                            mensaje: "El usuario " + usuario + " ya no pertenece a la cooperativa " + cuenta,
+                                            data: {}
+                                        })
+                                    }
+                                }
+                            }
+                        }
+                        return reject("El usuario no se encuentra asociado a esta Cooperativa")
+                    }
+                }
+                return reject("No existe la cuenta que deseas eliminar al usuario")
+            } catch (error) {
+                return reject(error);
+            }
+        });
+    }
 }
 
 module.exports = new cooperativasControllers();
